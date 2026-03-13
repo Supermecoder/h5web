@@ -72,7 +72,9 @@ jobs:
             ${{ runner.os }}-
 
       - name: Install dependencies ⚙️
-        run: pnpm install
+        run: |
+          pnpm install
+          pnpm exec playwright install firefox
 
       - name: Set up Python 🕹️
         id: setup-python
@@ -96,7 +98,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pypoetry/virtualenvs
-          key: poetry-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}-11 # increment to reset cache
+          key: poetry-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}-12 # increment to reset cache
 
       - name: Create Poetry environments 📜
         if: steps.poetry-venvs.outputs.cache-hit != 'true'
@@ -109,7 +111,7 @@ jobs:
         run: pnpm support:h5grove & pnpm wait-on http://localhost:8888 -t 1m
 
       - name: Test 👓
-        run: pnpm test
+        run: pnpm test:headless
 
   packages:
     runs-on: ubuntu-latest
